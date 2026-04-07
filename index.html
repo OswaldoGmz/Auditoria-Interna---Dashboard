@@ -132,6 +132,51 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-
   }
 
 
+
+  /* ── LOGOUT CONFIRM ── */
+  .logout-confirm {
+    position:fixed; top:58px; right:16px;
+    background:#fff;
+    border:1.5px solid #E66E0A;
+    border-radius:12px;
+    padding:12px 16px;
+    box-shadow:0 4px 20px rgba(100,60,10,0.15);
+    z-index:9998;
+    display:none;
+    align-items:center;
+    gap:10px;
+    font-family:'Barlow',sans-serif;
+    font-size:12px;
+    color:#281e12;
+    font-weight:600;
+    white-space:nowrap;
+    animation: fadeDown .15s ease;
+  }
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-6px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .logout-confirm-yes {
+    background:#E66E0A; color:#fff;
+    border:none; border-radius:6px;
+    padding:5px 12px; font-size:11px;
+    font-weight:700; cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;
+    letter-spacing:.5px;
+    transition:background .15s;
+  }
+  .logout-confirm-yes:hover { background:#b85508; }
+  .logout-confirm-no {
+    background:#f2ede6; color:#7a6a56;
+    border:none; border-radius:6px;
+    padding:5px 12px; font-size:11px;
+    font-weight:700; cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;
+    letter-spacing:.5px;
+    transition:background .15s;
+  }
+  .logout-confirm-no:hover { background:#e0d8cc; }
+
 </style>
 
 
@@ -164,8 +209,13 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-
       <span>Evaluación de la Calidad de Atención y Seguridad al Paciente</span>
     </div>
   </div>
-  <div class="header-badge" id="userBadge" style="cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="doLogout()">AUDITORÍA 2026</div>
+  <div class="header-badge" id="userBadge" style="cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="showLogoutConfirm()">AUDITORÍA 2026</div>
 </header>
+<div class="logout-confirm" id="logoutConfirm">
+  ¿Cerrar sesión?
+  <button class="logout-confirm-yes" onclick="confirmLogout()">Sí, salir</button>
+  <button class="logout-confirm-no" onclick="cancelLogout()">Cancelar</button>
+</div>
 <main class="main">
   <div class="section-label">Resumen General</div>
   <div class="kpi-row">
@@ -417,6 +467,29 @@ function doLogin() {
     document.getElementById('loginPass').value = '';
   }
 }
+
+function showLogoutConfirm() {
+  var c = document.getElementById('logoutConfirm');
+  c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function confirmLogout() {
+  document.getElementById('logoutConfirm').style.display = 'none';
+  doLogout();
+}
+
+function cancelLogout() {
+  document.getElementById('logoutConfirm').style.display = 'none';
+}
+
+// Close confirm if clicking outside
+document.addEventListener('click', function(e) {
+  var confirm = document.getElementById('logoutConfirm');
+  var badge   = document.getElementById('userBadge');
+  if (confirm && badge && !confirm.contains(e.target) && !badge.contains(e.target)) {
+    confirm.style.display = 'none';
+  }
+});
 
 function doLogout() {
   currentUser = null; currentArea = null;
